@@ -1,5 +1,12 @@
 data "aws_caller_identity" "current" {}
 
+locals {
+  minecraft-docker-image = var.java-or-bedrock == "bedrock" ? "itzg/minecraft-bedrock-server" : "itzg/minecraft-server"
+  containerport          = var.java-or-bedrock == "bedrock" ? "19132" : "25565"
+  hostport               = var.java-or-bedrock == "bedrock" ? "19132/udp" : "25565"
+  ingress-protocol       = var.java-or-bedrock == "bedrock" ? "udp" : "tcp"
+}
+
 resource "aws_ecs_cluster" "mc" {
   name = "minecraft"
 
@@ -20,7 +27,7 @@ resource "aws_ecs_task_definition" "mc" {
   container_definitions = jsonencode([
     {
       name      = "minecraft-server"
-      image     = "itzg/minecraft-server"
+      image     = local.minecraft-docker-image
       essential = false
       mountPoints = [
         {
@@ -36,8 +43,8 @@ resource "aws_ecs_task_definition" "mc" {
       ]
       portMappings = [
         {
-          containerPort = 25565
-          hostPort      = 25565
+          containerPort = local.containerport
+          hostPort      = local.hostport
         }
       ]
     },
@@ -114,9 +121,9 @@ resource "aws_security_group" "mc" {
 
   ingress {
     description = "Minecraft Clients"
-    from_port   = 25565
-    to_port     = 25565
-    protocol    = "tcp"
+    from_port   = local.containerport
+    to_port     = local.hostport
+    protocol    = local.ingress-protocol
     cidr_blocks = ["0.0.0.0/0"]
   }
 

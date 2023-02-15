@@ -43,17 +43,18 @@ module "storage" {
 }
 
 module "compute" {
-  source      = "./modules/compute"
-  vpc-id      = module.networking.vpc-id
-  sn-ids      = module.networking.sn-ids
-  region      = var.aws-region
-  fs-id       = module.storage.fs-id
-  fsap-id     = module.storage.fsap-id
-  sns-topic   = module.notify.sns-topic
-  dns-domain  = var.dns-domain
-  servername  = var.servername
-  cw-lg       = module.notify.cw-lg
-  r53-zone-id = module.networking.r53-zone-id
+  source          = "./modules/compute"
+  vpc-id          = module.networking.vpc-id
+  sn-ids          = module.networking.sn-ids
+  region          = var.aws-region
+  fs-id           = module.storage.fs-id
+  fsap-id         = module.storage.fsap-id
+  sns-topic       = module.notify.sns-topic
+  dns-domain      = var.dns-domain
+  servername      = var.servername
+  java-or-bedrock = var.java-or-bedrock
+  cw-lg           = module.notify.cw-lg
+  r53-zone-id     = module.networking.r53-zone-id
 }
 
 module "notify" {

@@ -12,3 +12,8 @@ variable "servername" {
   type        = string
   description = "Your server name here, ex: mc"
 }
+
+variable "java-or-bedrock" {
+  type        = string
+  description = "Which server version is required, ex: java or bedrock"
+}

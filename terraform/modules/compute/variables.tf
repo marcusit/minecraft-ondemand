@@ -37,3 +37,7 @@ variable "cw-lg" {
 variable "r53-zone-id" {
   type = string
 }
+
+variable "java-or-bedrock" {
+  type = string
+}
